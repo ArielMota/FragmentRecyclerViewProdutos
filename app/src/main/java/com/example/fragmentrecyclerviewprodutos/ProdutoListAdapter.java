@@ -11,20 +11,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.ListViewHolder> {
+public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.ListViewHolder> implements Filterable {
 
     private List<Produto> produtos;
+    private List<Produto> listaCheiaProdutos;
     private Context context;
 
     public ProdutoListAdapter(List<Produto> produtos, Context context) {
         this.produtos = produtos;
         this.context = context;
+        listaCheiaProdutos = new ArrayList<>(produtos);
     }
 
     @NonNull
@@ -96,6 +101,8 @@ public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.
 
 
 
+
+
     public class ListViewHolder extends  RecyclerView.ViewHolder {
 
         public ImageView imgProduto;
@@ -116,5 +123,45 @@ public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.
         return produtos.size();
     }
 
+    @Override
+    public Filter getFilter() {
+
+        return  produtoFiltro;
+    }
+
+    Filter produtoFiltro = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Produto> listaFiltrada = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0){
+                listaFiltrada.addAll(listaCheiaProdutos);
+            }else {
+                String filtroPadrao = constraint.toString();
+
+                for (Produto produto : listaCheiaProdutos){
+                    if (produto.getNome().contains(filtroPadrao)){
+                        listaFiltrada.add(produto);
+                    }
+                }
+
+            }
+
+            FilterResults resultados = new FilterResults();
+
+            resultados.values = listaFiltrada;
+
+            return resultados;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            produtos.clear();
+            produtos.addAll((List) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
 }
