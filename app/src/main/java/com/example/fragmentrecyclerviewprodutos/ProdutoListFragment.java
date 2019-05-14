@@ -1,5 +1,6 @@
 package com.example.fragmentrecyclerviewprodutos;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +47,10 @@ public class ProdutoListFragment extends Fragment {
 
     private EditText buscraFiltro;
 
+    private ProdutoHttp produtoHttp;
 
-    private List<Produto> carregarHoteis() {
+
+    /*private List<Produto> carregarHoteis() {
         List<Produto> produtos = new ArrayList<>();
         produtos.add(new Produto("Camisa Torcedor Infantil Flamengo I 2018/19 sem Número Adidas"
 
@@ -53,7 +69,7 @@ public class ProdutoListFragment extends Fragment {
 
 //...outros hotéis
         return produtos;
-    }
+    }*/
 
     @Nullable
     @Override
@@ -61,19 +77,22 @@ public class ProdutoListFragment extends Fragment {
 
         view = inflater.inflate(R.layout.lista_produtos,container,false);
 
-        produtos = carregarHoteis();
+        produtoHttp = new ProdutoHttp();
+        produtoHttp.getProdutos(getContext(),getActivity(), view);
 
-        myrecyclerview = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-          produtoListAdapter = new ProdutoListAdapter(produtos,getContext());
-        myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //myrecyclerview.setLayoutManager(new GridLayoutManager(getActivity(),2));
-
-        myrecyclerview.setAdapter(produtoListAdapter);
+        produtos = produtoHttp.listaprodutos;
 
 
+
+
+
+
+
+        setHasOptionsMenu(true);
 
         return view;
     }
+
 
 
     public interface AoClicarNoProduto {
@@ -83,6 +102,7 @@ public class ProdutoListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
 
 
 
@@ -114,7 +134,7 @@ public class ProdutoListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                produtoListAdapter.getFilter().filter(newText);
+                produtoHttp.produtoListAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -123,10 +143,6 @@ public class ProdutoListFragment extends Fragment {
 
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(true);
-    }
+
 }

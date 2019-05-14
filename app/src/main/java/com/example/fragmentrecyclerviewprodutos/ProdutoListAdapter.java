@@ -17,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +29,14 @@ public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.
     private List<Produto> produtos;
     private List<Produto> listaCheiaProdutos;
     private Context context;
+    RequestOptions option;
 
     public ProdutoListAdapter(List<Produto> produtos, Context context) {
         this.produtos = produtos;
         this.context = context;
         listaCheiaProdutos = new ArrayList<>(produtos);
+        //option = new RequestOptions().centerCrop().placeholder(R.drawable.loading_shape).error(R.drawable.loading_shape);
+
     }
 
     @NonNull
@@ -92,11 +99,14 @@ public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.
         estrelas_produto.setRating(produto.getEstrela());
 
 
-        ImageView imagem = listViewHolder.imgProduto;
+        //ImageView imagem = listViewHolder.imgProduto;
         //Resources res = context.getResources();
         //imagem.setImageResource(produtos.get(position).getImg());
-        imagem.setImageResource(produtos.get(position).getImg());
+        //imagem.setImageResource(produtos.get(position).getImg());
 
+        //Glide.with(context).load(produtos.get(position).getImg()).apply(option).into(listViewHolder.imgProduto);
+
+        Picasso.with(context).load(produtos.get(position).getImg()).into(listViewHolder.imgProduto);
     }
 
 
@@ -137,10 +147,10 @@ public class ProdutoListAdapter extends RecyclerView.Adapter<ProdutoListAdapter.
             if (constraint == null || constraint.length() == 0){
                 listaFiltrada.addAll(listaCheiaProdutos);
             }else {
-                String filtroPadrao = constraint.toString();
+                String filtroPadrao = constraint.toString().toLowerCase().trim();
 
                 for (Produto produto : listaCheiaProdutos){
-                    if (produto.getNome().contains(filtroPadrao)){
+                    if (produto.getNome().toLowerCase().contains(filtroPadrao)){
                         listaFiltrada.add(produto);
                     }
                 }

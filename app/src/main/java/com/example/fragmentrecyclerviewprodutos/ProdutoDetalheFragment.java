@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class ProdutoDetalheFragment extends Fragment {
 
     public static final String TAG_DETALHE = "tagDetalhe";
@@ -49,7 +51,8 @@ public class ProdutoDetalheFragment extends Fragment {
         txtEndereco = layout.findViewById(R.id.txt_preco);
         ratingBar = layout.findViewById(R.id.rtbar);
         if (produto != null) {
-            img_produto.setImageResource(produto.getImg());
+            //img_produto.setImageResource(produto.getImg());
+            Picasso.with(getContext()).load(produto.getImg()).into(img_produto);
             txtNome.setText(produto.getNome());
             txtEndereco.setText(produto.getPreco());
             ratingBar.setRating(produto.getEstrela());

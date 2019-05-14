@@ -1,14 +1,11 @@
 package com.example.fragmentrecyclerviewprodutos;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,48 +22,56 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ProdutoHttp {
 
-    private List<Produto> hoteis;
-
-    private RecyclerView recyclerView;
-    //private RecyclerView.Adapter mAdapter;
+    //String urllocal = "Produtos/";
+    String URLprodutos = APIconfig.URL;
+    List<Produto> listaprodutos;
+    private RecyclerView myrecyclerview;
+    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+     ProdutoListAdapter produtoListAdapter;
 
 
+   /* private List<Produto> getProdutos(String jsonString) {
+        List<Produto> produtos = new ArrayList<Produto>();
+        try {
+            JSONArray produtosJson = new JSONArray(jsonString);
+            JSONObject produto;
 
-        /*recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        recyclerView.setLayoutManager(layoutManager);
+            for (int i = 0; i < produtosJson.length(); i++) {
+                produto = new JSONObject(produtosJson.getString(i));
+               // Log.i("PESSOA ENCONTRADA: ", "id=" + produto.getString("id"));
+
+                Produto objetoProduto = new Produto();
+                objetoProduto.setNome(produto.getString("nome"));
+                objetoProduto.setPreco(produto.getString("preco"));
+                objetoProduto.setEstrela(produto.getLong("estrela"));
+                objetoProduto.setImg(produto.getString("url_img"));
+                produtos.add(objetoProduto);
+            }
+
+        } catch (JSONException e) {
+            Log.e("Erro", "Erro no parsing do JSON", e);
+        }
+        return produtos;
+    }*/
 
 
+    public void getProdutos(final Context context, final Activity activity, final View view) {
 
 
-        hoteis = carregarHoteis();
-
-        recyclerView.setAdapter(new ProdutoListAdapter(hoteis,this));*/
-
-
-
-    }
-
-    public void getProdutos() {
-
-
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(context);
 
 
 // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, APIconfig.URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLprodutos,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         List<Produto> produtos = new ArrayList<Produto>();
+
 
 
                         try {
@@ -83,10 +88,16 @@ public class MainActivity extends AppCompatActivity {
                                 objetoProduto.setEstrela(produto.getLong("estrela"));
                                 objetoProduto.setImg(produto.getString("url_img"));
                                 produtos.add(objetoProduto);
+
+                                System.out.println(produtos.get(i).getNome());
                             }
 
+                             myrecyclerview = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+                            produtoListAdapter = new ProdutoListAdapter(produtos,context);
+                            myrecyclerview.setLayoutManager(new LinearLayoutManager(activity));
+                            //myrecyclerview.setLayoutManager(new GridLayoutManager(activity(),2));
 
-
+                            myrecyclerview.setAdapter(produtoListAdapter);
 
                         } catch (JSONException e) {
                             Log.e("Erro", "kkkkkkkkkkkkkkkkkkkkkkkkkkkkk", e);
@@ -107,18 +118,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*private List<Produto> carregarHoteis() {
-        List<Produto> hoteis = new ArrayList<>();
-        hoteis.add(new Produto("New Beach hotel"
 
-                , 4.5f, R.drawable.perfil));
-        hoteis.add(new Produto("Paris Produto"
-                , 4.0f, R.drawable.perfil));
-        hoteis.add(new Produto("New Beach hotel"
 
-                , 3.5f, R.drawable.perfil));
 
-//...outros hotéis
-        return hoteis;
-    }*/
+
+
+
 }

@@ -6,16 +6,16 @@ public class Produto implements Serializable {
     private String nome;
     private String preco;
     private float estrela;
-    private int img;
+    private String url_img;
 
     public Produto(){
 
     }
 
-    public Produto(String nome, float estrela, int img, String preco) {
+    public Produto(String nome, float estrela, String img, String preco) {
         this.nome = nome;
         this.estrela = estrela;
-        this.img = img;
+        this.url_img = img;
         this.preco = preco;
     }
 
@@ -50,11 +50,11 @@ public class Produto implements Serializable {
         this.estrela = estrela;
     }
 
-    public int getImg() {
-        return img;
+    public String getImg() {
+        return url_img;
     }
 
-    public void setImg(int img) {
-        this.img = img;
+    public void setImg(String img) {
+        this.url_img = img;
     }
 }
