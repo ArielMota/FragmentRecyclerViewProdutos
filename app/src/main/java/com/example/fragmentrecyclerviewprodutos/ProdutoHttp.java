@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ProdutoHttp {
 
-    //String urllocal = "Produtos/";
+    String urllocal = "/prod/";
     String URLprodutos = APIconfig.URL;
     List<Produto> listaprodutos;
     private RecyclerView myrecyclerview;
@@ -66,7 +66,7 @@ public class ProdutoHttp {
 
 
 // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLprodutos,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLprodutos+urllocal,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
